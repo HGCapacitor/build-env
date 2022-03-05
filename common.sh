@@ -13,8 +13,9 @@ then
 fi
 BUILD_USER='builder'
 BUILD_GROUP='builder'
-PROJECT_NAME=$(basename ${REPOS_ROOT})
 PROJECT_DIR=$(dirname ${PWD})
+PROJECT_NAME=$(basename ${PROJECT_DIR})
+echo "INFO: using (${PROJECT_NAME}) as the project name."
 PROJECT_DIR_RESOURCES='/resources'
 PROJECT_DIR_BUILD="/${PWD/*\//}"
 #Reading overruled defaults

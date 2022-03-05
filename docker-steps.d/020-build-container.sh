@@ -12,7 +12,7 @@ else
 fi
 
 DOCKER_FILE="${BUILD_ENV_ROOT}/docker-steps.d/builder.dockerfile"
-DOCKER_IMAGE_TAG="${PROJECT_NAME}-builder:latest"
+DOCKER_IMAGE_TAG="${PROJECT_NAME,,}-builder:latest"
 
 usage() {
     echo -e "build-container-1.0"
