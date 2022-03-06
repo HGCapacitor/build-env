@@ -1,5 +1,5 @@
 #!/bin/bash
-BUILD_ENV_ROOT="$(readlink -f $(dirname $0))"
+BUILD_ENV_ROOT="$(dirname $(readlink -f $0))"
 
 COMMON="${BUILD_ENV_ROOT}/common.sh"
 if [[ -f ${COMMON} ]]
@@ -11,14 +11,14 @@ else
     exit 1
 fi
 
-DOCKER_IMAGE_TAG="${PROJECT_NAME}-builder:latest"
+DOCKER_IMAGE_TAG="${PROJECT_NAME,,}-builder:latest"
 
 usage() {
     echo -e "dockerize-1.0"
     echo -e "This script does not support long options!"
     echo -e "Usage: $0"
     echo -e "\t[-h]\t\tProvides this help"
-    echo -e "\t[-d <choice>]\tSpecify what to dockerize [build]"
+    echo -e "\t[-d <choice>]\tSpecify what to dockerize [build-tools]"
     echo -e "\t[-i]\t\tInteractive shell in the docker container"
     echo -e "\t[-l]\t\tList the executable docker steps"
     echo -e "\t[-p <string>]\tParameters to pass the dockerized script"
@@ -89,7 +89,7 @@ docker_run() {
         docker run -it ${DOCKER_SWITCHES} -v ${REPOS_ROOT}:${MOUNTED_SOURCES_DIR} -v ${RESOURCES_DIR}:${MOUNTED_RESOURCES_DIR} -v ${BUILD_DIR}:${MOUNTED_BUILD_DIR} -v ${SSH_AUTH_SOCK}:/ssh-agent -e SSH_AUTH_SOCK=/ssh-agent "$DOCKER_IMAGE_TAG" /bin/bash
         return $?
     else
-        docker run -it ${DOCKER_SWITCHES} -v ${REPOS_ROOT}:${MOUNTED_SOURCES_DIR} -v ${RESOURCES_DIR}:${MOUNTED_RESOURCES_DIR} -v ${BUILD_DIR}:${MOUNTED_BUILD_DIR} -v ${SSH_AUTH_SOCK}:/ssh-agent -e SSH_AUTH_SOCK=/ssh-agent -e DEBIAN_FRONTEND=noninteractive "$DOCKER_IMAGE_TAG" /bin/bash -c "sudo chown -R ${BUILD_USER}:${BUILD_GROUP} ${MOUNTED_PROJECT_DIR}; cd ${MOUNTED_BUILD_DIR}; ${MOUNTED_SOURCES_DIR}/commands/${SCRIPT_WITH_PARAMS}"
+        docker run -it ${DOCKER_SWITCHES} -v ${REPOS_ROOT}:${MOUNTED_SOURCES_DIR} -v ${RESOURCES_DIR}:${MOUNTED_RESOURCES_DIR} -v ${BUILD_DIR}:${MOUNTED_BUILD_DIR} -v ${SSH_AUTH_SOCK}:/ssh-agent -e SSH_AUTH_SOCK=/ssh-agent -e DEBIAN_FRONTEND=noninteractive "$DOCKER_IMAGE_TAG" /bin/bash -c "sudo chown -R ${BUILD_USER}:${BUILD_GROUP} ${MOUNTED_PROJECT_DIR}; cd ${MOUNTED_BUILD_DIR}; ${MOUNTED_SOURCES_DIR}/${SCRIPT_WITH_PARAMS}"
         return $?
     fi
 }
@@ -153,9 +153,9 @@ then
 fi
 
 case "${DOCKERIZE}" in
-    "build")
+    "build-tools")
         echo "INFO: Will dockerize: ${DOCKERIZE}"
-        COMMAND="build.sh ${DOCKERIZE_PARAMS}"
+        COMMAND="build-tools.sh ${DOCKERIZE_PARAMS}"
         docker_run ${COMMAND}
         docker_commit
         ;;
