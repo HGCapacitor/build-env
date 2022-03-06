@@ -89,7 +89,7 @@ docker_run() {
         docker run -it ${DOCKER_SWITCHES} -v ${REPOS_ROOT}:${MOUNTED_SOURCES_DIR} -v ${RESOURCES_DIR}:${MOUNTED_RESOURCES_DIR} -v ${BUILD_DIR}:${MOUNTED_BUILD_DIR} -v ${SSH_AUTH_SOCK}:/ssh-agent -e SSH_AUTH_SOCK=/ssh-agent "$DOCKER_IMAGE_TAG" /bin/bash
         return $?
     else
-        docker run -it ${DOCKER_SWITCHES} -v ${REPOS_ROOT}:${MOUNTED_SOURCES_DIR} -v ${RESOURCES_DIR}:${MOUNTED_RESOURCES_DIR} -v ${BUILD_DIR}:${MOUNTED_BUILD_DIR} -v ${SSH_AUTH_SOCK}:/ssh-agent -e SSH_AUTH_SOCK=/ssh-agent -e DEBIAN_FRONTEND=noninteractive "$DOCKER_IMAGE_TAG" /bin/bash -c "sudo chown -R ${BUILD_USER}:${BUILD_GROUP} ${MOUNTED_PROJECT_DIR}; cd ${MOUNTED_BUILD_DIR}; ${MOUNTED_SOURCES_DIR}/${SCRIPT_WITH_PARAMS}"
+        docker run -it ${DOCKER_SWITCHES} -v ${REPOS_ROOT}:${MOUNTED_SOURCES_DIR} -v ${RESOURCES_DIR}:${MOUNTED_RESOURCES_DIR} -v ${BUILD_DIR}:${MOUNTED_BUILD_DIR} -v ${SSH_AUTH_SOCK}:/ssh-agent -e SSH_AUTH_SOCK=/ssh-agent -e DEBIAN_FRONTEND=noninteractive "$DOCKER_IMAGE_TAG" /bin/bash -c "sudo chown -R ${BUILD_USER}:${BUILD_GROUP} ${MOUNTED_PROJECT_DIR}; cd ${MOUNTED_BUILD_DIR}; ${MOUNTED_SOURCES_DIR}/${BUILD_ENV_DIR}/${SCRIPT_WITH_PARAMS}"
         return $?
     fi
 }

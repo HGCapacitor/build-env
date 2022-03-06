@@ -5,17 +5,22 @@ then
     echo "FATAL_ERROR: Please create a subdirectory to run from"
     exit 100
 fi
-REPOS_ROOT="$(readlink -f $(dirname $0)/..)"
-if [[ -z "${REPOS_ROOT}" ]]
+if [[ -z "${BUILD_ENV_ROOT}" ]]
 then
-    echo "FATAL_ERROR: REPOS_ROOT was not set"
+    echo "FATAL_ERROR: BUILD_ENV_ROOT was not set"
     exit 101
+else
+    echo "INFO: Using (${BUILD_ENV_ROOT}) as build-env the root"
 fi
+BUILD_ENV_DIR="/${BUILD_ENV_ROOT/*\//}"
+echo "INFO: using (${BUILD_ENV_DIR}) as the nested build-env dir"
+REPOS_ROOT="$(dirname ${BUILD_ENV_ROOT})"
+echo "INFO: using (${REPOS_ROOT}) as the sources root"
 BUILD_USER='builder'
 BUILD_GROUP='builder'
 PROJECT_DIR=$(dirname ${PWD})
 PROJECT_NAME=$(basename ${PROJECT_DIR})
-echo "INFO: using (${PROJECT_NAME}) as the project name."
+echo "INFO: using (${PROJECT_NAME}) as the project name"
 PROJECT_DIR_RESOURCES='/resources'
 PROJECT_DIR_BUILD="/${PWD/*\//}"
 #Reading overruled defaults
@@ -41,7 +46,7 @@ fi
 if [[ "${BUILD_DIR}" == "${REPOS_ROOT}"* ]]
 then
     echo "FATAL_ERROR: Never build from the sources directory."
-    echo "DEBUG: build_dir(${BUILD_DIR}) == repos_root(${REPOS_ROOT})"
+    echo "DEBUG: build dir (${BUILD_DIR}) == sources root (${REPOS_ROOT})"
     exit 104
 else
     echo "INFO: Building from ${BUILD_DIR}"
