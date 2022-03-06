@@ -12,6 +12,7 @@ then
 else
     echo "INFO: Using (${BUILD_ENV_ROOT}) as build-env the root"
 fi
+NUMBER_OF_CORES=$(nproc)
 BUILD_ENV_DIR="/${BUILD_ENV_ROOT/*\//}"
 echo "INFO: using (${BUILD_ENV_DIR}) as the nested build-env dir"
 REPOS_ROOT="$(dirname ${BUILD_ENV_ROOT})"

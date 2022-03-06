@@ -41,7 +41,7 @@ builder_work() {
         echo "Unpacking $(basename ${RESOURCE_PATH})"
         pv "${RESOURCE_PATH}" | tar xz -C $(dirname ${SOURCE_PATH}) && \
         cd ${SOURCE_PATH} && \
-        ./bootstrap --parallel=16 && make -j 16 && run_privileged "install cmake-${VERSION}" "make" "install"
+        ./bootstrap --parallel=${NUMBER_OF_CORES} && make -j ${NUMBER_OF_CORES} && run_privileged "install cmake-${VERSION}" "make" "install"
     else
         echo "FATAL_ERROR: Failed to download cmake-${VERSION}"
         exit 22
