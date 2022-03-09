@@ -18,7 +18,7 @@ usage() {
     echo -e "This script does not support long options!"
     echo -e "Usage: $0"
     echo -e "\t[-h]\t\tProvides this help"
-    echo -e "\t[-d <choice>]\tSpecify what to dockerize [build-tools]"
+    echo -e "\t[-d <choice>]\tSpecify what to dockerize [build-tools build-project]"
     echo -e "\t[-i]\t\tInteractive shell in the docker container"
     echo -e "\t[-l]\t\tList the executable docker steps"
     echo -e "\t[-p <string>]\tParameters to pass the dockerized script"
@@ -34,8 +34,8 @@ while getopts ":hd:ilp:s:" opt; do
         exit 0
         ;;
     d)
-	DOCKERIZE=${OPTARG}
-	;;
+	      DOCKERIZE=${OPTARG}
+	      ;;
     i)
         PROGRAM_ACTION='INTERACTIVE_SHELL'
         ;;
@@ -156,6 +156,12 @@ case "${DOCKERIZE}" in
     "build-tools")
         echo "INFO: Will dockerize: ${DOCKERIZE}"
         COMMAND="build-tools.sh ${DOCKERIZE_PARAMS}"
+        docker_run ${COMMAND}
+        docker_commit
+        ;;
+    "build-project")
+        echo "INFO: Will dockerize: ${DOCKERIZE}"
+        COMMAND="build-project.sh ${DOCKERIZE_PARAMS}"
         docker_run ${COMMAND}
         docker_commit
         ;;
